@@ -1,5 +1,6 @@
 # X-Plane Blender Facade Exporter
 ## A minimalist exporter for X-Plane facades
+### By Connor Russell
 This tool provide a simple WYSIWYG way to export geometry, and attached objects, into an X-Plane facade. Currently, this tool only exports **Type 2** facades, and only exports **meshes**, **roof objects**, and **attached objects**, and of course the facade headers and spellings. Different floor heights, and facade-scrapers are not supported. Automatic creation of wall rules or spellings is not supported. Below is basic documention on how to use the tool to create facades in Blender, however it is strongly advised you **first** familiarize yourself with the [X-Plane facade format](https://developer.x-plane.com/article/x-plane-10-facade-fac-file-format-specification/), specifically **type 2 facades**.
 
 ## Supported Blender Versions
