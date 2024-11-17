@@ -132,6 +132,7 @@ def get_facade():
             header_text += "TEXTURE " + f.wall_texture_alb + "\n"
         if f.wall_texture_nml != "":
             header_text += "TEXTURE_NORMAL " + str(f.wall_texture_nml_scale) + " " + f.wall_texture_nml + "\n"
+            header_text += "SPECULAR 1.0\nNORMAL_METALNESS\n"
     else:
         header_text += "\nNO_WALL_MESH\n"
 
@@ -144,7 +145,8 @@ def get_facade():
         if f.roof_texture_alb != "":
             header_text += "TEXTURE " + f.roof_texture_alb + "\n"
         if f.roof_texture_nml != "":
-            header_text += "TEXTURE_NORMAL " + str(f.roof_texture_nml_scale) + " " + f.roof_texture_nml + "\n"     
+            header_text += "TEXTURE_NORMAL " + str(f.roof_texture_nml_scale) + " " + f.roof_texture_nml + "\n"
+            header_text += "SPECULAR 1.0\nNORMAL_METALNESS\n"     
     else:
         header_text += "\nNO_ROOF_MESH\n"
 
