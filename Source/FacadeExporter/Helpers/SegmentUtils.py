@@ -150,9 +150,9 @@ class AttachedObj:
 
         #Add the data index, x, y, z, rot_z, min_draw, max_draw
         if self.roof_obj:
-            out += str(index) + " " + MiscUtils.ftos(self.loc_x, 8) + " " + MiscUtils.ftos(self.loc_z, 8) + " " + MiscUtils.ftos(MiscUtils.resolve_heading(self.rot_z), 4) + " " + str(self.min_draw) + " " + str(self.max_draw)
+            out += str(index) + " " + MiscUtils.ftos(self.loc_x, 8) + " " + MiscUtils.ftos(self.loc_y, 8) + " " + MiscUtils.ftos(MiscUtils.resolve_heading(self.rot_z * -1), 4) + " " + str(self.min_draw) + " " + str(self.max_draw)
         else:
-            out += str(index) + " " + MiscUtils.ftos(self.loc_x, 8) + " " + MiscUtils.ftos(self.loc_z, 8) + " " + MiscUtils.ftos(self.loc_y, 8) + " " + MiscUtils.ftos(MiscUtils.resolve_heading(self.rot_z), 3) + " " + str(self.min_draw) + " " + str(self.max_draw)
+            out += str(index) + " " + MiscUtils.ftos(self.loc_x, 8) + " " + MiscUtils.ftos(self.loc_z, 8) + " " + MiscUtils.ftos(self.loc_y, 8) + " " + MiscUtils.ftos(MiscUtils.resolve_heading(self.rot_z + 180), 3) + " " + str(self.min_draw) + " " + str(self.max_draw)
 
         return out
 

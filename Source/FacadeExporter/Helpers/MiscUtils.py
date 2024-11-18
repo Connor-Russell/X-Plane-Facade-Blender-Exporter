@@ -16,8 +16,6 @@ def ftos(value, precision):
 
 #Converts a Blender heading to an X-Plane heading. positive being to the right vs negative to the right.
 def resolve_heading(heading):
-    heading *= -1
-
     while heading < 0:
         heading += 360
 
