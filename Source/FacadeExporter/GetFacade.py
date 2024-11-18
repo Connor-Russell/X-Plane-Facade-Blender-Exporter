@@ -129,9 +129,15 @@ def get_facade():
             header_text += "\nSHADER_WALL\n"
 
         if f.wall_texture_alb != "":
-            header_text += "TEXTURE " + f.wall_texture_alb + "\n"
+            tex_path = f.wall_texture_alb
+            if tex_path.startswith("//"):
+                tex_path = tex_path[2:]
+            header_text += "TEXTURE " + tex_path + "\n"
         if f.wall_texture_nml != "":
-            header_text += "TEXTURE_NORMAL " + str(f.wall_texture_nml_scale) + " " + f.wall_texture_nml + "\n"
+            tex_path = f.wall_texture_nml
+            if tex_path.startswith("//"):
+                tex_path = tex_path[2:]
+            header_text += "TEXTURE_NORMAL " + str(f.wall_texture_nml_scale) + " " + tex_path + "\n"
             header_text += "SPECULAR 1.0\nNORMAL_METALNESS\n"
     else:
         header_text += "\nNO_WALL_MESH\n"
@@ -143,9 +149,15 @@ def get_facade():
             header_text += "\nSHADER_ROOF\n"
 
         if f.roof_texture_alb != "":
-            header_text += "TEXTURE " + f.roof_texture_alb + "\n"
+            tex_path = f.roof_texture_alb
+            if tex_path.startswith("//"):
+                tex_path = tex_path[2:]
+            header_text += "TEXTURE " + tex_path + "\n"
         if f.roof_texture_nml != "":
-            header_text += "TEXTURE_NORMAL " + str(f.roof_texture_nml_scale) + " " + f.roof_texture_nml + "\n"
+            tex_path = f.roof_texture_nml
+            if tex_path.startswith("//"):
+                tex_path = tex_path[2:]
+            header_text += "TEXTURE_NORMAL " + str(f.roof_texture_nml_scale) + " " + tex_path + "\n"
             header_text += "SPECULAR 1.0\nNORMAL_METALNESS\n"     
     else:
         header_text += "\nNO_ROOF_MESH\n"

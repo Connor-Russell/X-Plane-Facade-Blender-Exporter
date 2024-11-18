@@ -123,3 +123,6 @@ if ($Test42) {
     Add-Content "$OutputTestDir\Test Results.csv" "4.2 Tests"
     Test-Exporter -BlenderExe $BlenderExe42
 }
+
+#Open the result file
+Invoke-Item "$OutputTestDir\Test Results.csv"
