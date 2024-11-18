@@ -17,7 +17,22 @@ $BlenderExe40 = "D:\Blender Versions\4.02\blender.exe"
 $BlenderExe41 = "D:\Blender Versions\4.11\blender.exe"
 $BlenderExe42 = "D:\Blender Versions\4.23\blender.exe"
 
-#Define functions to individual tests
+#Define bools to control what versions are tested
+$Test29 = $true
+$Test30 = $true
+$Test31 = $true
+$Test32 = $true
+$Test33 = $true
+$Test34 = $true
+$Test35 = $true
+$Test36 = $true
+$Test40 = $true
+$Test41 = $true
+$Test42 = $true
+
+#First run build our build script, which is in the same folder as this script
+& "$cd\Build.ps1"
+
 
 #Exporter function. Opens Blender, runs the export script and compares the results
 function Test-Exporter {
@@ -44,45 +59,67 @@ Add-Content "$OutputTestDir\Test Results.csv" "$DateAndTime`nTest Name,Result"
 #Run the tests
 
 #2.9 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "2.9 Tests"
-Test-Exporter -BlenderExe $BlenderExe29
+if ($Test29) {
+    Add-Content "$OutputTestDir\Test Results.csv" "2.9 Tests"
+    Test-Exporter -BlenderExe $BlenderExe29
+}
 
 #3.0 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "3.0 Tests"
-Test-Exporter -BlenderExe $BlenderExe30
+if ($Test30) {
+    Add-Content "$OutputTestDir\Test Results.csv" "3.0 Tests"
+    Test-Exporter -BlenderExe $BlenderExe30
+}
 
 #3.1 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "3.1 Tests"
-Test-Exporter -BlenderExe $BlenderExe31
+if ($Test31) {
+    Add-Content "$OutputTestDir\Test Results.csv" "3.1 Tests"
+    Test-Exporter -BlenderExe $BlenderExe31
+}
 
 #3.2 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "3.2 Tests"
-Test-Exporter -BlenderExe $BlenderExe32
+if ($Test32) {
+    Add-Content "$OutputTestDir\Test Results.csv" "3.2 Tests"
+    Test-Exporter -BlenderExe $BlenderExe32
+}
 
 #3.3 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "3.3 Tests"
-Test-Exporter -BlenderExe $BlenderExe33
+if ($Test33) {
+    Add-Content "$OutputTestDir\Test Results.csv" "3.3 Tests"
+    Test-Exporter -BlenderExe $BlenderExe33
+}
 
 #3.4 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "3.4 Tests"
-Test-Exporter -BlenderExe $BlenderExe34
+if ($Test34) {
+    Add-Content "$OutputTestDir\Test Results.csv" "3.4 Tests"
+    Test-Exporter -BlenderExe $BlenderExe34
+}
 
 #3.5 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "3.5 Tests"
-Test-Exporter -BlenderExe $BlenderExe35
+if ($Test35) {
+    Add-Content "$OutputTestDir\Test Results.csv" "3.5 Tests"
+    Test-Exporter -BlenderExe $BlenderExe35
+}
 
 #3.6 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "3.6 Tests"
-Test-Exporter -BlenderExe $BlenderExe36
+if ($Test36) {
+    Add-Content "$OutputTestDir\Test Results.csv" "3.6 Tests"
+    Test-Exporter -BlenderExe $BlenderExe36
+}
 
 #4.0 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "4.0 Tests"
-Test-Exporter -BlenderExe $BlenderExe40
+if ($Test40) {
+    Add-Content "$OutputTestDir\Test Results.csv" "4.0 Tests"
+    Test-Exporter -BlenderExe $BlenderExe40
+}
 
 #4.1 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "4.1 Tests"
-Test-Exporter -BlenderExe $BlenderExe41
+if ($Test41) {
+    Add-Content "$OutputTestDir\Test Results.csv" "4.1 Tests"
+    Test-Exporter -BlenderExe $BlenderExe41
+}
 
 #4.2 Tests
-Add-Content "$OutputTestDir\Test Results.csv" "4.2 Tests"
-Test-Exporter -BlenderExe $BlenderExe42
+if ($Test42) {
+    Add-Content "$OutputTestDir\Test Results.csv" "4.2 Tests"
+    Test-Exporter -BlenderExe $BlenderExe42
+}

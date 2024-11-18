@@ -97,4 +97,10 @@ A spelling defines an order of segments that can be used to fill out the wall. X
 
 Spellings are a space seperated list of zero-based segment indexs. I.e. a spelling of "1 0" represents using the second wall, then the first wall. This space seperated list of zero-based segment indicies is what you should enter in the "Spelling" field of your Spelling in the facade properties. The syste, sounds very complicated at first, but once you've used it a couple times, you'll find it quite easy and very powerful.
 
+### Project Notes for Developers
 
+Build.ps1 copies the files into the Blender directories, you will need to change the paths to match your system.
+
+Test.ps1 runs automated tests on all Blender versions specified, you will need to adjust file paths for your system. Test.ps1 will call Build.ps1 before testing, to ensure the addon is up to date.
+
+There are run configurations in VS Code to run the build.ps1 and test.ps1 scripts.
