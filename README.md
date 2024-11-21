@@ -33,7 +33,7 @@ Every blender object has properties under the "X-Plane Facade Exporter" section 
 
 **Group:** What draw group this mesh is in (useful for transparency). Keep in mind groups are *not* maintained between LODs
 
-**Cuts:** How many cuts this mesh has lengthways. This is used for curves. If my mesh is a plane with 4 verticies, it has 0 cuts. If I subdivide the edges that are running lengthways (positive Y axis) twice, my mesh now has 2 cuts, and will curve at those 2 points on curved segments. More cuts obviously result in smoother curves.
+**Segments:** How many segments this mesh has lengthways. This is used for curves. If my mesh is a plane with 4 verticies, it has 1 segment. If I subdivide the edges that are running lengthways (positive Y axis) twice, my mesh now has 3 segments, and will curve at those 2 points on curved facade edges. More segments obviously result in smoother curves.
 
 ## Attached Object
 X-Plane facade segments, and roofs, can have attached objects. These are references to X-Plane .obj's, that are place at a relative position along a wall, or on the roof. In this addon, **empties** are the quivalent of a X-Plane facade **attached object**
@@ -62,13 +62,15 @@ This addon supports a single facade per Blender file. The facade's properties ar
 
 ### Wall Properties:
 
-**Render Wall:** Whether there should be any wall geometry. Note you MUST have wall geometry for X-Plane to calculate layouts. Disabling this just disabled rendering of the walls in X-Plane.
+**Render Wall:** Whether there should be any wall geometry *rendered*. Note you MUST have wall geometry for X-Plane to calculate layouts. Disabling this just disabled rendering of the walls in X-Plane.
 
 **Texture ALB Path:** The path for your albedo texture, relative to your facade file.
 
 **Texture NML Path:** The path for your normal map texture, relative to your facade file.
 
 **Texture NML Scale:** How many times your normal map repeats to one repetition of your albedo. Just like TEXTURE_NORMAL in your polygons.
+
+**Decals:** These settings allow you to add custom [decals](https://developer.x-plane.com/article/using-decals-to-add-detail-to-scenery/). There are 4 decal slots, 2 for the albedo, 2 for the normal. By default these are combined, but checking the box "Seperate Normal Decals" will allow you to control the normal and albedo decals independantly. Next to each decal slot it is indicated it's purpose, BOTH, ALB (albedo), or NML (normal). When in both mode, the RGB decal keys will be used for the normal map keys. 
 
 ### Roof Properties:
 
@@ -79,6 +81,8 @@ This addon supports a single facade per Blender file. The facade's properties ar
 **Texture NML Path:** The path for your normal map texture, relative to your facade file.
 
 **Texture NML Scale:** How many times your normal map repeats to one repetition of your albedo. Just like TEXTURE_NORMAL in your polygons.
+
+**Decals:** These settings allow you to add custom [decals](https://developer.x-plane.com/article/using-decals-to-add-detail-to-scenery/). There are 4 decal slots, 2 for the albedo, 2 for the normal. By default these are combined, but checking the box "Seperate Normal Decals" will allow you to control the normal and albedo decals independantly. Next to each decal slot it is indicated it's purpose, BOTH, ALB (albedo), or NML (normal). When in both mode, the RGB decal keys will be used for the normal map keys. 
 
 ## Spellings
 For a full understanding of Spellings, please see the [X-Plane documentation](https://developer.x-plane.com/article/x-plane-10-facade-fac-file-format-specification/)
