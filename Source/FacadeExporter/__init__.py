@@ -24,6 +24,7 @@ import bpy
 #Our modules
 from . import FacadeProperties
 from . import ObjectProperties
+from . import DecalProperties
 
 #List of all classes to register
 classes = (
@@ -39,6 +40,9 @@ def register():
     #Register the spelling item type
     bpy.utils.register_class(FacadeProperties.FacadeSpellingItem)
 
+    #Register the decal type
+    bpy.utils.register_class(DecalProperties.DecalProperties)
+
     #Facade wide properties
     bpy.utils.register_class(FacadeProperties.PROP_facade_exporter)
     bpy.types.Scene.facade_exporter = bpy.props.PointerProperty(type=FacadeProperties.PROP_facade_exporter)
@@ -50,9 +54,9 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-def unregister():
+    bpy.app.handlers.load_post.append(FacadeProperties.set_four_decals)
 
-    del bpy.types.Scene.facade_exporter
+def unregister():
 
     for cls in classes:
         bpy.utils.unregister_class(cls)
@@ -60,6 +64,7 @@ def unregister():
     bpy.utils.unregister_class(FacadeProperties.PROP_facade_exporter)
     bpy.utils.unregister_class(ObjectProperties.PROP_facade_object)
     bpy.utils.unregister_class(FacadeProperties.FacadeSpellingItem)
+    bpy.utils.unregister_class(DecalProperties.DecalProperties)
 
 if __name__ == "__main__":
     register()

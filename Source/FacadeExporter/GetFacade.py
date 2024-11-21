@@ -7,6 +7,7 @@ import bpy
 from .Helpers import SegmentUtils
 from . import GetSegment
 from . import GetRoof
+from . import DecalProperties
 
 def get_collections_in_ui_order():
     collections = []
@@ -139,6 +140,14 @@ def get_facade():
                 tex_path = tex_path[2:]
             header_text += "TEXTURE_NORMAL " + str(f.wall_texture_nml_scale) + " " + tex_path + "\n"
             header_text += "SPECULAR 1.0\nNORMAL_METALNESS\n"
+
+        #Decals
+        if f.wall_modulator_texture != "":
+            header_text += "TEXTURE_MODULATOR " + f.wall_modulator_texture + "\n"
+        
+        for index, item in enumerate(f.wall_decals):
+            header_text += DecalProperties.DecalProperties.to_string(item)
+
     else:
         header_text += "\nNO_WALL_MESH\n"
 
@@ -158,7 +167,14 @@ def get_facade():
             if tex_path.startswith("//"):
                 tex_path = tex_path[2:]
             header_text += "TEXTURE_NORMAL " + str(f.roof_texture_nml_scale) + " " + tex_path + "\n"
-            header_text += "SPECULAR 1.0\nNORMAL_METALNESS\n"     
+            header_text += "SPECULAR 1.0\nNORMAL_METALNESS\n"   
+
+        #Decals
+        if f.roof_modulator_texture != "":  
+            header_text += "TEXTURE_MODULATOR " + f.roof_modulator_texture + "\n"
+
+        for index, item in enumerate(f.roof_decals):
+            header_text += DecalProperties.DecalProperties.to_string(item)
     else:
         header_text += "\nNO_ROOF_MESH\n"
 
