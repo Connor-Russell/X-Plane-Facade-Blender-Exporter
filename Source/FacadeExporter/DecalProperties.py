@@ -13,8 +13,9 @@ def update_ui(self, context):
 
 class DecalProperties(bpy.types.PropertyGroup):
     enabled: bpy.props.BoolProperty(name="Enabled", description="Whether this decal slot is enabled", update=update_ui)# type: ignore
-    alb: bpy.props.StringProperty(name="Decal Albedo", description="The albedo to use in the decal")# type: ignore
-    nml: bpy.props.StringProperty(name="Decal Normal", description="The normal to use in the decal (uses RGB keys)")# type: ignore
+    decal_lib: bpy.props.StringProperty(name="Decal Asset", description=".dcl to use instead of putting it directly in the facade", update=update_ui)# type: ignore
+    alb: bpy.props.StringProperty(name="Decal Albedo", description="The albedo to use in the decal", subtype="FILE_PATH")   # type: ignore
+    nml: bpy.props.StringProperty(name="Decal Normal", description="The normal to use in the decal (uses RGB keys)", subtype="FILE_PATH")    # type: ignore
 
     projected: bpy.props.BoolProperty(name="Projected", description="Whether the decal's UVs are projected, independant of the base UVs'", update=update_ui)# type: ignore
     tile_ratio: bpy.props.FloatProperty(name="Tile Ratio", description="The ratio of the decal's tiling to the base texture's tiling", default=1.0)# type: ignore
@@ -43,7 +44,6 @@ class DecalProperties(bpy.types.PropertyGroup):
     type: bpy.props.StringProperty(name="Decal Type", description="The type of decal this is. Set to BOTH ALB or NML by the parent properties.")# type: ignore
     visible: bpy.props.BoolProperty(name="Visible", description="Whether this decal is visible in the UI", default=True)# type: ignore
 
-
     def draw(layout, property_item, index):
         layout.prop(property_item, "enabled", text=f"Decal {index + 1} - " + property_item.type)
         fac_props = bpy.context.scene.facade_exporter
@@ -51,6 +51,13 @@ class DecalProperties(bpy.types.PropertyGroup):
         if property_item.enabled:
 
             box = layout.box()
+
+            #Decal Library
+            box.prop(property_item, "decal_lib")
+
+            if property_item.decal_lib != "":
+                box.label(text="Decal asset is set, other properties are ignored.")
+                return
 
             #Textures
             if property_item.type == "BOTH":
@@ -110,8 +117,11 @@ class DecalProperties(bpy.types.PropertyGroup):
         if (not property_item.visible) or (not property_item.enabled):
             return ""
         
+        if property_item.decal_lib != "":
+            return "DECAL_LIB " + property_item.decal_lib + "\n"
+        
         #Make sure there is a texture specified
-        if property_item.alb == "" and property_item.nrm == "":
+        if property_item.alb == "" and property_item.nml == "":
             return ""
         
         decal_string_alb = ""
@@ -121,30 +131,37 @@ class DecalProperties(bpy.types.PropertyGroup):
         if property_item.projected:
             if (property_item.type == "ALB" or property_item.type == "BOTH") and property_item.alb != "":
                 decal_string_alb = "DECAL_PARAMS_PROJ " + ftos(property_item.scale_x, 2) + " " + ftos(property_item.scale_y, 2) + " "
-            if (property_item.type == "BOTH" or property_item.type == "NML") and property_item.nrm != "":
+            if (property_item.type == "BOTH" or property_item.type == "NML") and property_item.nml != "":
                 decal_string_nml = "NORMAL_DECAL_PARAMS_PROJ " + ftos(property_item.scale_x, 2) + " " + ftos(property_item.scale_y, 2) + " "
         else:
             if (property_item.type == "ALB" or property_item.type == "BOTH") and property_item.alb != "":
                 decal_string_alb = "DECAL_PARAMS " + ftos(property_item.tile_ratio, 2) + " "
-            if (property_item.type == "BOTH" or property_item.type == "NML") and property_item.nrm != "":
+            if (property_item.type == "BOTH" or property_item.type == "NML") and property_item.nml != "":
                 decal_string_nml = "NORMAL_DECAL_PARAMS " + ftos(property_item.tile_ratio, 2) + " "
 
         #For readability
         p = property_item
 
+        alb_path = p.alb
+        nml_path = p.nml
+        if alb_path.startswith("//"):
+            alb_path = alb_path[2:]
+        if nml_path.startswith("//"):
+            nml_path = nml_path[2:]
+
         #Finish off the albedo
         if decal_string_alb != "":
-            decal_string_alb += (str(p.dither_ratio) + " " +
-                                 str(p.rgb_decal_key_red) + " " + str(p.rgb_decal_key_green) + " " + str(p.rgb_decal_key_blue) + " " + str(p.rgb_decal_key_alpha) + " " +
-                                 str(p.rgb_strength_modulator) + " " + str(p.rgb_strength_constant) + " " +
-                                 str(p.alpha_decal_key_red) + " " + str(p.alpha_decal_key_green) + " " + str(p.alpha_decal_key_blue) + " " + str(p.alpha_decal_key_alpha) + " " +
-                                 str(p.alpha_strength_modulator) + " " + str(p.alpha_strength_constant) + " " + p.alb)
+            decal_string_alb += (ftos(p.dither_ratio, 2) + " " +
+                                 ftos(p.rgb_decal_key_red, 2) + " " + ftos(p.rgb_decal_key_green, 2) + " " + ftos(p.rgb_decal_key_blue, 2) + " " + ftos(p.rgb_decal_key_alpha, 2) + " " +
+                                 ftos(p.rgb_strength_modulator, 2) + " " + ftos(p.rgb_strength_constant, 2) + " " +
+                                 ftos(p.alpha_decal_key_red, 2) + " " + ftos(p.alpha_decal_key_green, 2) + " " + ftos(p.alpha_decal_key_blue, 2) + " " + ftos(p.alpha_decal_key_alpha, 2) + " " +
+                                 ftos(p.alpha_strength_modulator, 2) + " " + ftos(p.alpha_strength_constant, 2) + " " + alb_path)
 
         #Finish off the normal
         if decal_string_nml != "":
-            decal_string_nml += (str(p.rgb_decal_key_red) + " " + str(p.rgb_decal_key_green) + " " + str(p.rgb_decal_key_blue) + " " + str(p.rgb_decal_key_alpha) + " " +
-                                 str(p.rgb_strength_modulator) + " " + str(p.rgb_strength_constant) + p.nml)
+            decal_string_nml += (ftos(p.rgb_decal_key_red, 2) + " " + ftos(p.rgb_decal_key_green, 2) + " " + ftos(p.rgb_decal_key_blue, 2) + " " + ftos(p.rgb_decal_key_alpha, 2) + " " +
+                                 ftos(p.rgb_strength_modulator, 2) + " " + ftos(p.rgb_strength_constant, 2) + " " + nml_path)
             
-        return decal_string_alb + "\n" + decal_string_nml
+        return decal_string_alb + "\n" + decal_string_nml + "\n"
 
         

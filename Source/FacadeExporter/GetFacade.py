@@ -3,7 +3,7 @@
 #Date: 11/14/2024
 #Purpose: Provide a single function call to get the facade file text from all the collections
 
-import bpy
+import bpy  #type: ignore
 from .Helpers import SegmentUtils
 from . import GetSegment
 from . import GetRoof
@@ -143,7 +143,10 @@ def get_facade():
 
         #Decals
         if f.wall_modulator_texture != "":
-            header_text += "TEXTURE_MODULATOR " + f.wall_modulator_texture + "\n"
+            mod_texture = f.wall_modulator_texture
+            if mod_texture.startswith("//"):
+                mod_texture = mod_texture[2:]
+            header_text += "TEXTURE_MODULATOR " + mod_texture + "\n"
         
         for index, item in enumerate(f.wall_decals):
             header_text += DecalProperties.DecalProperties.to_string(item)
@@ -171,7 +174,10 @@ def get_facade():
 
         #Decals
         if f.roof_modulator_texture != "":  
-            header_text += "TEXTURE_MODULATOR " + f.roof_modulator_texture + "\n"
+            mod_texture = f.roof_modulator_texture
+            if mod_texture.startswith("//"):
+                mod_texture = mod_texture[2:]
+            header_text += "TEXTURE_MODULATOR " + mod_texture + "\n"
 
         for index, item in enumerate(f.roof_decals):
             header_text += DecalProperties.DecalProperties.to_string(item)
