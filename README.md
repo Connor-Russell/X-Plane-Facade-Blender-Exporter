@@ -8,6 +8,12 @@ This tool provide a simple WYSIWYG way to export geometry, and attached objects,
  - Blender 4.1-4.23: Partial. Normals are not properly translated when an object has a rotation transformation.
  - If it does not work on a listed version please let me know!
 
+## Install
+- Download the latest release
+- Go to your Blender settings, then the addon page
+- Click the install button, and choose the downloaded .zip
+- Search for FacadeExporter in the addon list and enable it
+
 ## Coordinate Orientation
 **Positive Y:** This is lengthways (parallel) along the facade wall.
 
