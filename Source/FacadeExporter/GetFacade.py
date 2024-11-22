@@ -37,6 +37,15 @@ def get_facade():
         #Make the name lowercase
         col_name = col_name.lower()
 
+        #Make sure there are exportable objects in this collection
+        good_for_export = False
+        for obj in col.objects:
+            if obj.facade_object.exportable == True:
+                good_for_export = True
+                break
+        if not good_for_export:
+            continue
+
         #Make sure this facade name doesn't end in _curved
         if col_name.endswith("_curved"):
             continue
