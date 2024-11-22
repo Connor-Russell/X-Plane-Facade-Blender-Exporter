@@ -15,7 +15,7 @@ This tool provide a simple WYSIWYG way to export geometry, and attached objects,
 - Search for FacadeExporter in the addon list and enable it
 
 ## Coordinate Orientation
-**Positive Y:** This is lengthways (parallel) along the facade wall.
+**NEGATIVE Y:** This is lengthways (parallel) along the facade wall. Please note it is **negative**, *not* positive Y. 0 Y is the start of a wall, negative \<your wall length\> Y is the end
 
 **Positive X:** This is extruding perpendicular, away from the wall.
 
