@@ -105,3 +105,50 @@ def create_debug_obj(verticies, indicies):
     # Link the object to the root scene collection
     bpy.context.collection.objects.link(obj)
 
+def create_mesh_from_draw_call(verticies, indicies, name):
+    #Create a new bmesh
+    bm = bmesh.new()
+
+    #Add all the verticies
+    for vertex in verticies:
+        bm.verts.new((vertex.loc_x, vertex.loc_y, vertex.loc_z))
+
+    # Update the bmesh to ensure the vertices are added
+    bm.verts.ensure_lookup_table()
+
+    #Create a uv layer
+    uv_layer = bm.loops.layers.uv.new(name="UVMap")
+
+    #Iterate through the indicies, 3 at a time, and create a face with the verticies at specified indicies
+    i = 0
+
+    while i < len(indicies) - 2:
+        # Add vertices to the bmesh
+        v1 = verticies[indicies[i]]
+        v2 = verticies[indicies[i + 1]]
+        v3 = verticies[indicies[i + 2]]
+
+        # Create a new face with the vertices
+        face = bm.faces.new([v1, v2, v3])
+
+        #Assign the UV coordinates to the face
+        face.loops[0][uv_layer].uv = (verticies[indicies[i]].uv_x, verticies[indicies[i]].uv_y)
+        face.loops[1][uv_layer].uv = (verticies[indicies[i + 1]].uv_x, verticies[indicies[i + 1]].uv_y)
+        face.loops[2][uv_layer].uv = (verticies[indicies[i + 2]].uv_x, verticies[indicies[i + 2]].uv_y)
+
+        # Update the bmesh to ensure the face is added
+        bm.faces.ensure_lookup_table()
+
+        i = i + 3
+
+    # Finish up, write the bmesh back to the mesh
+    mesh = bpy.data.meshes.new(name)
+    bm.to_mesh(mesh)
+    bm.free()
+
+    # Create an object with the mesh and link it to the scene
+    obj = bpy.data.objects.new(name, mesh)
+    bpy.context.collection.objects.link(obj)
+    bpy.context.view_layer.objects.active = obj
+
+    return obj
