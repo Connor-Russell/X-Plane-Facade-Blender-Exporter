@@ -25,6 +25,7 @@ import bpy
 from . import FacadeProperties
 from . import ObjectProperties
 from . import DecalProperties
+from . import FacadeParser
 
 #List of all classes to register
 classes = (
@@ -34,6 +35,9 @@ classes = (
     FacadeProperties.MENU_BT_facade_exporter_add_spelling,
     FacadeProperties.MENU_BT_facade_exporter_remove_spelling
 )
+
+def menu_func_import(self, context):
+    self.layout.operator(FacadeParser.IMPORT_xp_fac.bl_idname, text="X-Plane Facades (.fac)")
 
 def register():
 
@@ -51,6 +55,10 @@ def register():
     bpy.utils.register_class(ObjectProperties.PROP_facade_object)
     bpy.types.Object.facade_object = bpy.props.PointerProperty(type=ObjectProperties.PROP_facade_object)
 
+    #Importer
+    bpy.utils.register_class(FacadeParser.IMPORT_xp_fac)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
+
     for cls in classes:
         bpy.utils.register_class(cls)
 
@@ -65,6 +73,10 @@ def unregister():
     bpy.utils.unregister_class(ObjectProperties.PROP_facade_object)
     bpy.utils.unregister_class(FacadeProperties.FacadeSpellingItem)
     bpy.utils.unregister_class(DecalProperties.DecalProperties)
+
+    #Unregister the importer
+    bpy.utils.unregister_class(FacadeParser.IMPORT_xp_fac)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
 
 if __name__ == "__main__":
     register()

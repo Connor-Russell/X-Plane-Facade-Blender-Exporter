@@ -32,12 +32,12 @@ function Copy-Files {
 $cd = Get-Location
 $appData = $env:APPDATA
 $SourcePath = "$cd\Source" #Change this to your repository path
-$BlenderPath = "$appData\Blender Foundation\Blender\3.1\scripts\addons"   #Change this to your Blender directory. MAKE A BACKUP OF OLDER VERSIONS OF THIS ADDON FIRST!
+$BlenderPath = "$appData\Blender Foundation\Blender\3.6\scripts\addons"   #Change this to your Blender directory. MAKE A BACKUP OF OLDER VERSIONS OF THIS ADDON FIRST!
 $BlenderTestingAddonPath = "D:\Blender Versions\scripts\addons"
 
 #Copy the files from the Source directory to the Blender directory
 Copy-Files -SourcePath $SourcePath -BlenderPath $BlenderPath
 
 #Copy the files from the Source directory to the BlenderTestingAddon directory
-Copy-Files -SourcePath $SourcePath -BlenderPath $BlenderTestingAddonPath
+#Copy-Files -SourcePath $SourcePath -BlenderPath $BlenderTestingAddonPath
 

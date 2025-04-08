@@ -117,7 +117,7 @@ def create_mesh_from_draw_call(verticies, indicies, name):
     bm.verts.ensure_lookup_table()
 
     #Create a uv layer
-    uv_layer = bm.loops.layers.uv.new(name="UVMap")
+    uv_layer = bm.loops.layers.uv.new()
 
     #Iterate through the indicies, 3 at a time, and create a face with the verticies at specified indicies
     i = 0
@@ -127,6 +127,19 @@ def create_mesh_from_draw_call(verticies, indicies, name):
         v1 = verticies[indicies[i]]
         v2 = verticies[indicies[i + 1]]
         v3 = verticies[indicies[i + 2]]
+
+        #Create new vertices in the bmesh for each vertex
+        v1 = bm.verts.new((v1.loc_x, v1.loc_y, v1.loc_z))
+        v2 = bm.verts.new((v2.loc_x, v2.loc_y, v2.loc_z))
+        v3 = bm.verts.new((v3.loc_x, v3.loc_y, v3.loc_z))
+        
+        #Set the normals for the vertices
+        v1.normal = (verticies[indicies[i]].normal_x, verticies[indicies[i]].normal_y, verticies[indicies[i]].normal_z)
+        v2.normal = (verticies[indicies[i + 1]].normal_x, verticies[indicies[i + 1]].normal_y, verticies[indicies[i + 1]].normal_z)
+        v3.normal = (verticies[indicies[i + 2]].normal_x, verticies[indicies[i + 2]].normal_y, verticies[indicies[i + 2]].normal_z)
+
+        # Update the bmesh to ensure the vertices are added
+        bm.verts.ensure_lookup_table()
 
         # Create a new face with the vertices
         face = bm.faces.new([v1, v2, v3])

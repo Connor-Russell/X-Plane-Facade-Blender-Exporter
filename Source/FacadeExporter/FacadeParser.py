@@ -1,6 +1,7 @@
 
 import os
-import bpy
+import bpy  # type: ignore
+from bpy_extras.io_utils import ImportHelper # type: ignore
 
 from .Helpers.GeometryUtils import create_mesh_from_draw_call
 from .Helpers.GeometryUtils import XPVertex
@@ -15,13 +16,15 @@ def import_facade(inPfac_file_path):
     current_verts = []
     current_indices = []
     current_idx = -1    #-1 is roof, otherwise idx of the segment
-    is_first_curved_segment = False
+    is_first_curved_segment = True
     is_first_floor = True
 
     roof_scale_x = 0.0
     roof_scale_y = 0.0
     roof_objects = []
     roof_height = 0.0
+
+    do_have_roof_mesh = True
 
     #Open the file and read line by line
     with open(inPfac_file_path, 'r') as pfac_file:
@@ -36,7 +39,9 @@ def import_facade(inPfac_file_path):
                 continue
 
             #Check the command
-            if parts[0] == 'OBJ':
+            if parts[0] == 'NO_ROOF_MESH':
+                do_have_roof_mesh = False
+            elif parts[0] == 'OBJ':
                 #Format: OBJ <resource>
                 #This just defines an object referenceable by an index
                 new_obj_resource = parts[1]
@@ -66,13 +71,14 @@ def import_facade(inPfac_file_path):
 
                 roof_objects.append(new_obj)
             elif parts[0] == 'VERTEX':
-                cur_vert = XPVertex()
+                #We swap Z and Y because of XP coventions
+                cur_vert = XPVertex(0, 0, 0, 0, 0, 0, 0, 0)
                 cur_vert.loc_x = float(parts[1])
-                cur_vert.loc_y = float(parts[2])
-                cur_vert.loc_z = float(parts[3])
+                cur_vert.loc_z= float(parts[2])
+                cur_vert.loc_y = float(parts[3])
                 cur_vert.normal_x = float(parts[4])
-                cur_vert.normal_y = float(parts[5])
-                cur_vert.normal_z = float(parts[6])
+                cur_vert.normal_z = float(parts[5])
+                cur_vert.normal_y = float(parts[6])
                 cur_vert.uv_x = float(parts[7])
                 cur_vert.uv_y = float(parts[8])
 
@@ -107,22 +113,21 @@ def import_facade(inPfac_file_path):
                     current_verts = []
                     current_indices = []
 
-                current_group = int(parts[1])
-                current_far_lod = int(parts[2])
-                current_cuts = int(parts[3])
+                current_group = int(float(parts[1]))
+                current_far_lod = int(float(parts[2]))
+                current_cuts = int(float(parts[3]))
             elif parts[0] == 'SEGMENT' or parts[0] == 'SEGMENT_CURVED':
-                if current_idx == -1:
+                if current_idx == -1 and do_have_roof_mesh:
                     #Create a new collection
                     new_collection = bpy.data.collections.new("ROOF")
                     bpy.context.scene.collection.children.link(new_collection)
                     bpy.context.view_layer.active_layer_collection = bpy.context.view_layer.layer_collection.children[new_collection.name]
-                    new_collection.objects.link(bpy.context.object)
 
                     #Create the verticies for the roof obj
-                    bottom_left = XPVertex()
-                    bottom_right = XPVertex()
-                    top_left = XPVertex()
-                    top_right = XPVertex()
+                    bottom_left = XPVertex(0, 0, 0, 0, 0, 0, 0, 0)
+                    bottom_right = XPVertex(0, 0, 0, 0, 0, 0, 0, 0)
+                    top_left = XPVertex(0, 0, 0, 0, 0, 0, 0, 0)
+                    top_right = XPVertex(0, 0, 0, 0, 0, 0, 0, 0)
                     bottom_left.loc_x = 0
                     bottom_left.loc_y = 0
                     bottom_left.normal_x = 0
@@ -191,13 +196,40 @@ def import_facade(inPfac_file_path):
 
                 #Reset index if this is the first curved segment
                 current_idx += 1
-                if is_first_curved_segment:
+                if is_first_curved_segment and parts[0] == 'SEGMENT_CURVED':
                     current_idx = 0
                     is_first_curved_segment = False
 
                 #Name it the WALL_<current_idx>[_curved](if this is a curved segment)
                 new_collection.name = "WALL_" + str(current_idx) + ("_curved" if parts[0] == 'SEGMENT_CURVED' else "")
 
+    #Append the last mesh object
+    if len(current_verts) > 0:
+        new_obj = create_mesh_from_draw_call(current_verts, current_indices, "Segment")
+        new_obj.facade_object.group = current_group
+        new_obj.facade_object.far_lod = current_far_lod
+        new_obj.facade_object.cuts = current_cuts
+        new_obj.facade_object.exportable = True
 
+        current_verts = []
+        current_indices = []
+
+class IMPORT_xp_fac(bpy.types.Operator, ImportHelper):
+    bl_idname = "import_scene.xp_fac"
+    bl_label = "Import X-Plane Facades"
+    filename_ext = ".fac"
+    filter_glob: bpy.props.StringProperty(default="*.fac", options={'HIDDEN'}) # type: ignore
+    files: bpy.props.CollectionProperty(type=bpy.types.PropertyGroup)  # To support multiple files
+
+    def execute(self, context):
+        # Implement your import logic here
+        directory = self.filepath
+        directory = directory[:directory.rfind("\\")]
+
+        for cf in self.files:
+            filepath = f"{directory}\\{cf.name}"
+            import_facade(filepath)
+
+        return {'FINISHED'}
 
             
